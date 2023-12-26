@@ -8,6 +8,10 @@ function App() {
 
   const getBookList = async () => {
     try {
+      if (inputMessage.length === 0) {
+        console.log("Empty!!");
+        return;
+      }
       const result = await axios.get(
         `https://www.googleapis.com/books/v1/volumes?q=${inputMessage}`
       );
@@ -34,11 +38,21 @@ function App() {
             }}
             value={inputMessage}
           />
-          <ul>
-            {bookList.map((item, index) => {
-              return <li key={index}>{item.volumeInfo.title}</li>;
-            })}
-          </ul>
+          {(() => {
+            if (inputMessage.length === 0) {
+              return <p>Please type in the box</p>;
+            } else if (bookList && bookList.length > 0) {
+              return (
+                <ul>
+                  {bookList.map((item, index) => {
+                    return <li key={index}>{item.volumeInfo.title}</li>;
+                  })}
+                </ul>
+              );
+            } else {
+              return <p>Books not found</p>;
+            }
+          })()}
         </>
       }
     </div>
